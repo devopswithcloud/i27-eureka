@@ -1,37 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blue-deployment
-  labels:
-    app: blue-app
+  name: i27-eureka-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blue-app
+      name: i27-eureka-dev
   template:
     metadata:
       labels:
-        app: blue-app
+        name: i27-eureka-dev
     spec:
       containers:
-      - image: DIT
-        name: bluepod
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
+        - name: i27-eureka-dev
+          image: DIT
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: blue-service
-  labels:
-    app: blue-app
-  annotations:
+  name: i27-eureka-dev
 spec:
-  type: NodePort
   selector:
-    app: blue-app
+    name: i27-eureka-dev
   ports:
-    - port: 80
-      targetPort: 80
+    - protocol: TCP
+      port: 80
+      targetPort: 8761
+  type: NodePort
