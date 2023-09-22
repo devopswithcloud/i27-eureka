@@ -15,7 +15,7 @@ spec:
         app: blue-app
     spec:
       containers:
-      - image: devopswithcloudhub/nginx:blue
+      - image: DIT
         name: bluepod
         imagePullPolicy: Always
         ports:
